@@ -1,0 +1,49 @@
+{
+  "name": "nathanheffley/laravel-analytics",
+  "description": "A simple analytics system for Laravel 5 projects.",
+  "keywords": [
+    "laravel",
+    "analytics"
+  ],
+  "homepage": "https://github.com/nathanheffley/laravel-analytics",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Nathan Heffley",
+      "email": "dev@nathanheffley.com",
+      "homepage": "https://www.nathanheffley.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php" : "^7.0",
+    "illuminate/contracts": "~5.6.0",
+    "illuminate/support": "~5.6.0",
+    "nesbot/carbon": "^1.22"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.0",
+    "orchestra/testbench" : "~3.6.0",
+    "phpunit/phpunit" : "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "NathanHeffley\\Analytics\\": "src"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "NathanHeffley\\Analytics\\AnalyticsServiceProvider"
+      ],
+      "aliases": {
+        "Analytics": "NathanHeffley\\Analytics\\AnalyticsFacade"
+      }
+    }
+  },
+  "autload-dev": {
+    "psr-4": {
+      "NathanHeffley\\Analytics\\Tests\\": "tests"
+    }
+  }
+}
