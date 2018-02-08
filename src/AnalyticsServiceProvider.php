@@ -9,7 +9,7 @@ class AnalyticsServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/config/analytics.php' => config_path('analytics.php'),
+            __DIR__ . '/../config/analytics.php' => config_path('analytics.php'),
         ]);
 
         $this->loadMigrationsFrom(__DIR__.'/migrations');
@@ -18,7 +18,7 @@ class AnalyticsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/config/analytics.php', 'analytics'
+            __DIR__ . '/../config/analytics.php', 'analytics'
         );
 
         $this->app->bind('analytics', 'NathanHeffley\Analytics\Analytics');
