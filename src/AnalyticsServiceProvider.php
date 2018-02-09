@@ -18,7 +18,7 @@ class AnalyticsServiceProvider extends ServiceProvider
             __DIR__ . '/../config/analytics.php' => config_path('analytics.php'),
         ]);
 
-        $this->loadMigrationsFrom(__DIR__.'/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../migrations');
     }
 
     public function register()
