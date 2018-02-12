@@ -5,21 +5,21 @@ namespace NathanHeffley\Analytics\Test\Unit;
 use Mockery;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Foundation\Auth\User;
-use NathanHeffley\Analytics\Pageview;
+use NathanHeffley\Analytics\Analytics;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class PageviewTest extends TestCase
+class AnalyticsTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @var \NathanHeffley\Analytics\Pageview */
-    protected $pageview;
+    /** @var \NathanHeffley\Analytics\Analytics */
+    protected $analytics;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->pageview = new Pageview();
+        $this->analytics = new Analytics();
     }
 
     protected function getPackageProviders($app)
@@ -30,9 +30,11 @@ class PageviewTest extends TestCase
     }
 
     /** @test */
-    public function pageview_can_record_a_view_for_a_guest()
+    public function analytics_can_record_a_pageview_for_a_guest()
     {
-        $this->pageview->record('/example-page');
+        $this->analytics->record('pageview', [
+            'path' => '/example-page',
+        ]);
 
         $this->assertDatabaseHas('pageviews', [
             'user_id' => null,
@@ -41,12 +43,15 @@ class PageviewTest extends TestCase
     }
 
     /** @test */
-    public function pageview_can_record_a_view_for_a_user()
+    public function analytics_can_record_a_pageview_for_a_given_user()
     {
         $user = Mockery::mock(User::class);
         $user->shouldReceive('getAttribute')->with('id')->andReturn(1);
 
-        $this->pageview->record('/example-page', $user);
+        $this->analytics->record('pageview', [
+            'user' => $user,
+            'path' => '/example-page',
+        ]);
 
         $this->assertDatabaseHas('pageviews', [
             'user_id' => 1,
