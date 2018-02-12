@@ -1,16 +1,16 @@
 <?php
 
-namespace NathanHeffley\Analytics\Test\Unit\Http\Middleware;
+namespace NathanHeffley\Analytics\Tests\Unit\Http\Middleware;
 
-use Illuminate\Foundation\Auth\User;
 use Mockery;
 use Illuminate\Http\Request;
-use Orchestra\Testbench\TestCase;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use NathanHeffley\Analytics\Tests\UnitTest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use NathanHeffley\Analytics\Http\Middleware\Pageview;
 
-class PageviewTest extends TestCase
+class PageviewTest extends UnitTest
 {
     use RefreshDatabase;
 
@@ -22,18 +22,6 @@ class PageviewTest extends TestCase
         parent::setUp();
 
         $this->middleware = new Pageview();
-    }
-
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            'NathanHeffley\Analytics\AnalyticsServiceProvider',
-        ];
     }
 
     /** @test */

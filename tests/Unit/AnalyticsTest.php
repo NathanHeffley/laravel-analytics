@@ -1,14 +1,14 @@
 <?php
 
-namespace NathanHeffley\Analytics\Test\Unit;
+namespace NathanHeffley\Analytics\Tests\Unit;
 
 use Mockery;
-use Orchestra\Testbench\TestCase;
 use Illuminate\Foundation\Auth\User;
 use NathanHeffley\Analytics\Analytics;
+use NathanHeffley\Analytics\Tests\UnitTest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class AnalyticsTest extends TestCase
+class AnalyticsTest extends UnitTest
 {
     use RefreshDatabase;
 
@@ -20,18 +20,6 @@ class AnalyticsTest extends TestCase
         parent::setUp();
 
         $this->analytics = new Analytics();
-    }
-
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            'NathanHeffley\Analytics\AnalyticsServiceProvider',
-        ];
     }
 
     /** @test */
