@@ -22,6 +22,11 @@ class AnalyticsTest extends TestCase
         $this->analytics = new Analytics();
     }
 
+    protected function tearDown()
+    {
+        Mockery::close();
+    }
+
     protected function getPackageProviders($app)
     {
         return [
@@ -33,12 +38,12 @@ class AnalyticsTest extends TestCase
     public function analytics_can_record_a_pageview_for_a_guest()
     {
         $this->analytics->record('pageview', [
-            'path' => '/example-page',
+            'path' => 'example/page',
         ]);
 
         $this->assertDatabaseHas('pageviews', [
             'user_id' => null,
-            'path' => '/example-page',
+            'path' => 'example/page',
         ]);
     }
 
@@ -50,12 +55,12 @@ class AnalyticsTest extends TestCase
 
         $this->analytics->record('pageview', [
             'user' => $user,
-            'path' => '/example-page',
+            'path' => 'example/page',
         ]);
 
         $this->assertDatabaseHas('pageviews', [
             'user_id' => 1,
-            'path' => '/example-page',
+            'path' => 'example/page',
         ]);
     }
 }
