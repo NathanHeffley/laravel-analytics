@@ -8,6 +8,6 @@ class AnalyticsFacade extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'Analytics';
+        return 'analytics';
     }
 }

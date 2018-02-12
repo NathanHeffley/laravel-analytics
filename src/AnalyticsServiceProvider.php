@@ -21,6 +21,6 @@ class AnalyticsServiceProvider extends ServiceProvider
             __DIR__.'/config/analytics.php', 'analytics'
         );
 
-        $this->app->bind(Analytics::class, 'Analytics');
+        $this->app->bind('analytics', 'NathanHeffley\Analytics\Analytics');
     }
 }
