@@ -44,9 +44,14 @@ class AnalyticsTest extends UnitTest
     /**
      * @test
      * @throws
-    */
-    public function analytics_can_record_a_pageview_for_a_given_user()
+     */
+    public function analytics_can_record_a_pageview_for_a_given_user_with_no_exclusions()
     {
+        Config::set('excluded', [
+            'column' => null,
+            'values' => null,
+        ]);
+
         $user = Mockery::mock(User::class);
         $user->shouldReceive('getAttribute')->with('id')->andReturn(1);
 
@@ -62,14 +67,96 @@ class AnalyticsTest extends UnitTest
         ]);
     }
 
+    /**
+     * @test
+     * @throws
+     */
+    public function analytics_can_record_a_pageview_for_a_non_excluded_user_with_one_exclusion()
+    {
+        Config::set('excluded', [
+            'column' => 'role',
+            'values' => 'admin',
+        ]);
+
+        $user = Mockery::mock(User::class);
+        $user->shouldReceive('getAttribute')->with('id')->andReturn(1);
+        $user->shouldReceive('getAttribute')->with('role')->andReturn('client');
+
+        $this->analytics->record('pageview', [
+            'user' => $user,
+            'path' => 'example/page',
+        ]);
+
+        $this->assertEquals(1, Pageview::count());
+        $this->assertDatabaseHas('pageviews', [
+            'user_id' => 1,
+            'path' => 'example/page',
+        ]);
+    }
+
     /** @test */
-    public function analytics_does_not_record_a_pageview_for_an_excluded_user()
+    public function analytics_does_not_record_a_pageview_for_an_excluded_user_with_one_exclusion()
+    {
+        Config::set('excluded', [
+            'column' => 'role',
+            'values' => 'admin',
+        ]);
+
+        $user = Mockery::mock(User::class);
+        $user->shouldReceive('getAttribute')->with('id')->andReturn(1);
+        $user->shouldReceive('getAttribute')->with('role')->andReturn('admin');
+
+        $this->analytics->record('pageview', [
+            'user' => $user,
+            'path' => 'example/page',
+        ]);
+
+        $this->assertDatabaseMissing('pageviews', [
+            'user_id' => 1,
+            'path' => 'example/page',
+        ]);
+    }
+
+    /**
+     * @test
+     * @throws
+    */
+    public function analytics_can_record_a_pageview_for_a_non_excluded_user_with_multiple_exclusions()
     {
         Config::set('excluded', [
             'column' => 'role',
             'values' => [
                 'manager',
                 'admin',
+                'owner',
+            ],
+        ]);
+
+        $user = Mockery::mock(User::class);
+        $user->shouldReceive('getAttribute')->with('id')->andReturn(1);
+        $user->shouldReceive('getAttribute')->with('role')->andReturn('client');
+
+        $this->analytics->record('pageview', [
+            'user' => $user,
+            'path' => 'example/page',
+        ]);
+
+        $this->assertEquals(1, Pageview::count());
+        $this->assertDatabaseHas('pageviews', [
+            'user_id' => 1,
+            'path' => 'example/page',
+        ]);
+    }
+
+    /** @test */
+    public function analytics_does_not_record_a_pageview_for_an_excluded_user_with_multiple_exclusions()
+    {
+        Config::set('excluded', [
+            'column' => 'role',
+            'values' => [
+                'manager',
+                'admin',
+                'owner',
             ],
         ]);
 

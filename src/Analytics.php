@@ -17,26 +17,25 @@ class Analytics extends Model
     {
         $user = empty($data['user']) ? null : $data['user'];
 
-        $excludedColumn = config('excluded.column');
-        $excludedValues = config('excluded.values');
-
-        $abort = false;
-        if ($user && $excludedValues) {
-            foreach($excludedValues as $value) {
-                if ($user->$excludedColumn == $value) {
-                    $abort = true;
-                }
-            }
-        }
-        if ($abort) return;
-
-        $userId = empty($user) ? null : $user->id;
+        if ($this->isExcluded($user)) return;
 
         $pageview = new Pageview([
-            'user_id' => $userId,
+            'user_id' => is_null($user) ? null : $user->id,
             'path' => $data['path'],
         ]);
 
         $pageview->save();
+    }
+
+    protected function isExcluded($user)
+    {
+        $excludedColumn = config('excluded.column');
+        $excludedValues = collect(config('excluded.values'));
+
+        if ($excludedValues->isEmpty()) return false;
+
+        if ($excludedValues->contains($user->$excludedColumn)) return true;
+
+        return false;
     }
 }
