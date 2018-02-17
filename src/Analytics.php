@@ -15,8 +15,25 @@ class Analytics extends Model
 
     protected function recordPageview($data)
     {
+        $user = empty($data['user']) ? null : $data['user'];
+
+        $excludedColumn = config('excluded.column');
+        $excludedValues = config('excluded.values');
+
+        $abort = false;
+        if ($user && $excludedValues) {
+            foreach($excludedValues as $value) {
+                if ($user->$excludedColumn == $value) {
+                    $abort = true;
+                }
+            }
+        }
+        if ($abort) return;
+
+        $userId = empty($user) ? null : $user->id;
+
         $pageview = new Pageview([
-            'user_id' => empty($data['user']) ? null : $data['user']->id,
+            'user_id' => $userId,
             'path' => $data['path'],
         ]);
 
