@@ -3,6 +3,7 @@
 namespace NathanHeffley\Analytics;
 
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AnalyticsServiceProvider extends ServiceProvider
@@ -17,6 +18,14 @@ class AnalyticsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/analytics.php' => config_path('analytics.php'),
         ]);
+
+        Route::group([
+            'namespace' => 'NathanHeffley\Analytics\Http\Controllers',
+        ], function () {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        });
+
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'analytics');
 
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
     }
